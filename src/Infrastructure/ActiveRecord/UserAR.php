@@ -3,6 +3,7 @@
 namespace src\Infrastructure\ActiveRecord;
 
 use yii\db\ActiveRecord;
+use Yii;
 
 class UserAR extends ActiveRecord implements \yii\web\IdentityInterface
 {
@@ -60,13 +61,7 @@ class UserAR extends ActiveRecord implements \yii\web\IdentityInterface
      */
     public static function findByUsername($username)
     {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
-
-        return null;
+        return static::findOne(['username' => $username]);
     }
 
     /**
@@ -101,6 +96,6 @@ class UserAR extends ActiveRecord implements \yii\web\IdentityInterface
      */
     public function validatePassword($password)
     {
-        return $this->password === $password;
+        return Yii::$app->security->validatePassword($password, $this->password_hash);
     }
 }
