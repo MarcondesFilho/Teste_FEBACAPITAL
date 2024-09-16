@@ -9,9 +9,9 @@ class Livro
     private string $autor;
     private float $preco;
     private int $estoque;
-    private ?string $imagem;
+    private ?string $imagem = null;
 
-    public function __construct(string $isbn, string $titulo, string $autor, float $preco, int $estoque, ?string $imagem = null)
+    public function __construct(string $isbn, string $titulo, string $autor, float $preco, int $estoque)
     {
         $this->isbn = $isbn;
         $this->titulo = $titulo;
@@ -48,5 +48,10 @@ class Livro
     public function getImagem(): string
     {
         return $this->imagem;
+    }
+
+    public function setImagem(string $caminhoImagem): void
+    {
+        $this->imagem = $caminhoImagem;
     }
 }

@@ -11,15 +11,14 @@ class Cliente
     private CPF $cpf;
     private Endereco $endereco;
     private string $sexo;
-    private ?string $imagem;
+    private ?string $imagem = null;
 
-    public function __construct(string $nome, CPF $cpf, Endereco $endereco, string $sexo, ?string $imagem = null)
+    public function __construct(string $nome, CPF $cpf, Endereco $endereco, string $sexo)
     {
         $this->nome = $nome;
         $this->cpf = $cpf;
         $this->endereco = $endereco;
         $this->sexo = $sexo;
-        $this->imagem = $imagem;
     }
 
     public function getNome(): string
@@ -45,5 +44,10 @@ class Cliente
     public function getImagem(): string
     {
         return $this->imagem;
+    }
+
+    public function setImagem(string $caminhoImagem): void
+    {
+        $this->imagem = $caminhoImagem;
     }
 }

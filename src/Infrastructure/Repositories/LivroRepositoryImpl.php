@@ -20,6 +20,11 @@ class LivroRepositoryImpl implements LivroRepository
         return $livroAR->save();
     }
 
+    public function findById($id)
+    {
+        return LivroAR::findOne($id);
+    }
+
     public function findByIsbn(string $isbn): ?LivroEntity
     {
         $livroAR = LivroAR::findOne(['isbn' => $isbn]);

@@ -19,6 +19,11 @@ class ClienteRepositoryImpl implements ClienteRepository
         return $clienteAR->save();
     }
 
+    public function findById($id)
+    {
+        return ClienteAR::findOne($id);
+    }
+
     public function findByCpf(string $cpf): ?ClienteEntity
     {
         $clienteAR = ClienteAR::findOne(['cpf' => $cpf]);

@@ -3,6 +3,8 @@
 namespace src\Interfaces\Http\Controllers;
 
 use src\Application\Services\LivroService;
+use src\Interfaces\Http\Requests\LivroRequest;
+use yii\web\NotFoundHttpException;
 use Yii;
 use yii\web\Controller;
 use yii\web\UploadedFile;
@@ -27,6 +29,23 @@ class LivroController extends Controller
         }
 
         return $this->asJson(['error' => 'Erro ao cadastrar livro'], 400);
+    }
+
+    public function actionUpdate($id)
+    {
+        $livroRequest = new LivroRequest();
+
+        if ($livroRequest->load(Yii::$app->request->post(), '') && $livroRequest->validate()) {
+            $imagem = UploadedFile::getInstanceByName('imagem'); // Obtém a imagem enviada, se houver
+            try {
+                $this->livroService->update($id, $livroRequest->getAttributes(), $imagem); // Atualiza passando a imagem
+                return ['status' => 'success', 'message' => 'Livro atualizado com sucesso.'];
+            } catch (\Exception $e) {
+                return ['status' => 'error', 'message' => $e->getMessage()];
+            }
+        }
+
+        throw new NotFoundHttpException('Livro não encontrado ou dados inválidos.');
     }
 
     public function actionList()

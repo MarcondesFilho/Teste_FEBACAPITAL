@@ -3,9 +3,11 @@
 namespace src\Interfaces\Http\Controllers;
 
 use src\Application\Services\ClienteService;
+use src\Interfaces\Http\Requests\ClienteRequest;
 use Yii;
 use yii\web\Controller;
 use yii\web\UploadedFile;
+use yii\web\NotFoundHttpException;
 
 class ClienteController extends Controller
 {
@@ -27,6 +29,23 @@ class ClienteController extends Controller
         }
 
         return $this->asJson(['error' => 'Erro ao cadastrar cliente'], 400);
+    }
+
+    public function actionUpdate($id)
+    {
+        $clienteRequest = new ClienteRequest();
+
+        if ($clienteRequest->load(Yii::$app->request->post(), '') && $clienteRequest->validate()) {
+            $imagem = UploadedFile::getInstanceByName('imagem'); // Obtém a imagem enviada, se houver
+            try {
+                $this->clienteService->update($id, $clienteRequest->getAttributes(), $imagem); // Atualiza passando a imagem
+                return ['status' => 'success', 'message' => 'Cliente atualizado com sucesso.'];
+            } catch (\Exception $e) {
+                return ['status' => 'error', 'message' => $e->getMessage()];
+            }
+        }
+
+        throw new NotFoundHttpException('Cliente não encontrado ou dados inválidos.');
     }
 
     public function actionList()
