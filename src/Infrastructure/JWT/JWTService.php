@@ -37,7 +37,8 @@ class JWTService
     public function validateToken($token)
     {
         try {
-            $decoded = JWT::decode($token, $this->key, ['HS256']);
+//            $decoded = JWT::decode($token, $this->key, ['HS256']);
+            $decoded = JWT::decode($token, new Key($this->key, 'HS256'));
             
             $decodedArray = json_decode(json_encode($decoded), true);
 
