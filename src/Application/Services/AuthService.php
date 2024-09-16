@@ -19,7 +19,7 @@ class AuthService
 
     public function authenticate(string $username, string $password): ?string
     {
-        $user = $this->userRepository->findByUsername($username);
+        $user = $this->userRepository->findById($username);
 
         if ($user && Yii::$app->getSecurity()->validatePassword($password, $user->getPassword())) {
             return $this->jwtService->generateToken($user->getUsername());

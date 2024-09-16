@@ -4,12 +4,17 @@ $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
 $config = [
-    'id' => 'basic',
+    'id' => 'console-app',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+    ],
+    'container' => [
+        'definitions' => [
+            'src\Domain\Repositories\UsuarioRepository' => 'src\Infrastructure\Repositories\UsuarioRepositoryImpl',
+        ],
     ],
     'components' => [
         'urlManager' => [

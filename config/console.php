@@ -4,10 +4,10 @@ $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
 $config = [
-    'id' => 'basic-console',
+    'id' => 'console-app',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
-    'controllerNamespace' => 'app\src\Application\Commands',
+    'controllerNamespace' => 'src\Application\Commands',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -33,6 +33,15 @@ $config = [
         'migrate' => [
             'class' => 'yii\console\controllers\MigrateController',
             'migrationPath' => '@app/src/Infrastructure/Migrations',
+        ],
+        'usuario' => [
+            'class' => 'src\Application\Commands\UsuarioController',
+            'authService' => 'src\Application\Services\AuthService',
+        ],
+    ],
+    'container' => [
+        'definitions' => [
+            'src\Domain\Repositories\UsuarioRepository' => 'src\Infrastructure\Repositories\UsuarioRepositoryImpl',
         ],
     ],
 ];

@@ -10,25 +10,12 @@ class UsuarioRepositoryImpl implements UsuarioRepository
 {
     public function save(UsuarioEntity $usuario): bool
     {
-        // Lógica para salvar o usuário no banco de dados
         $usuarioAR = new UsuarioAR();
-        $usuarioAR->username = $usuario->getUsername();
-        $usuarioAR->password = $usuario->getPassword();
-        $usuarioAR->name = $usuario->getName();
-
-        return $usuarioAR ->save();
-    }
-
-    public function findByUsername(string $username): ?UsuarioEntity
-    {
-        // Lógica para buscar o usuário no banco de dados
-        $userData = UsuarioAR::findOne(['username' => $username]);
-
-        if ($userData) {
-            return new UsuarioEntity($userData->username, $userData->password, $userData->name);
-        }
-
-        return null;
+        $usuarioAR->login = $usuario->getUsername(); // Correção aplicada
+        $usuarioAR->senha = $usuario->getPassword(); // Correção aplicada
+        $usuarioAR->nome = $usuario->getName();      // Correção aplicada
+        
+        return $usuarioAR->save();
     }
 
     public function findById($id): ?UsuarioEntity
@@ -39,5 +26,10 @@ class UsuarioRepositoryImpl implements UsuarioRepository
         }
         
         return new UsuarioEntity($usuarioAR->login, $usuarioAR->senha, $usuarioAR->nome);
+    }
+
+    public function findByLogin($login): ?UsuarioEntity
+    {
+        return UsuarioAR::findOne(['login' => $login]);
     }
 }

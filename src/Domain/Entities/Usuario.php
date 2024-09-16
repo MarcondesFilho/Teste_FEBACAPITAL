@@ -15,17 +15,17 @@ class Usuario
         $this->nome = $nome;
     }
 
-    public function getLogin()
+    public function getUsername()
     {
         return $this->login;
     }
 
-    public function getSenha()
+    public function getPassword()
     {
         return $this->senha;
     }
 
-    public function getNome()
+    public function getName()
     {
         return $this->nome;
     }
