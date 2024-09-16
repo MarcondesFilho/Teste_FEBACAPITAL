@@ -3,6 +3,7 @@
 namespace src\Infrastructure\JWT;
 
 use Firebase\JWT\JWT;
+use Yii;
 
 class JWTService
 {
@@ -12,7 +13,7 @@ class JWTService
 
     public function __construct()
     {
-        $this->key = \Yii::$app->params['jwtSecretKey'];
+        $this->key = Yii::$app->params['jwtSecretKey'];
         $this->issuer = 'https://meusistema.com'; // Domínio configurado para o emissor
         $this->audience = 'https://meusistema.com'; // Domínio para quem o token é destinado (audience)
     }
@@ -30,14 +31,18 @@ class JWTService
             'sub' => $userId,              // Identificação do usuário
         ];
 
-        return JWT::encode($payload, $this->key);
+        return JWT::encode($payload, $this->key, 'HS256');
     }
 
     public function validateToken($token)
     {
         try {
             $decoded = JWT::decode($token, $this->key, ['HS256']);
-            return (array) $decoded;
+            
+            $decodedArray = json_decode(json_encode($decoded), true);
+
+            return $decodedArray;
+            
         } catch (\Exception $e) {
             // Lidar com exceção de token inválido ou expirado
             return false;

@@ -12,6 +12,11 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
+        'urlManager' => [
+        'enablePrettyUrl' => true,
+        'showScriptName' => false,
+        'rules' => [],
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'olmXn7opFVmTRplfb9yl4TRBedoDFiq9',
@@ -42,14 +47,30 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-            ],
+        
+    'urlManager' => [
+        'enablePrettyUrl' => true,  
+        'showScriptName' => false,  
+        'enableStrictParsing' => true, 
+        'rules' => [
+            // Rota para Clientes
+            'GET api/clientes' => 'cliente/index',          // Listar todos os clientes
+            'GET api/clientes/<id:\d+>' => 'cliente/view',  // Visualizar um cliente específico
+            'POST api/clientes' => 'cliente/create',        // Criar um novo cliente
+            'PUT api/clientes/<id:\d+>' => 'cliente/update',// Atualizar um cliente
+            'DELETE api/clientes/<id:\d+>' => 'cliente/delete', // Excluir um cliente
+
+            // Rota para Livros
+            'GET api/livros' => 'livro/index',              // Listar todos os livros
+            'GET api/livros/<id:\d+>' => 'livro/view',      // Visualizar um livro específico
+            'POST api/livros' => 'livro/create',            // Criar um novo livro
+            'PUT api/livros/<id:\d+>' => 'livro/update',    // Atualizar um livro
+            'DELETE api/livros/<id:\d+>' => 'livro/delete', // Excluir um livro
+
+            // Rota para Autenticação
+            'POST api/login' => 'auth/login',               // Rota para fazer login e gerar JWT
         ],
-        */
+],
     ],
     'params' => $params,
 ];
