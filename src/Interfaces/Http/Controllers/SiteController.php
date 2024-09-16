@@ -1,14 +1,14 @@
 <?php
 
-namespace app\controllers;
+namespace src\Interfaces\Http\Controllers;
 
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
-use app\models\ContactForm;
+use src\Interfaces\Http\Requests\LoginFormRequest;
+use src\Interfaces\Http\Requests\ContactFormRequest;
 
 class SiteController extends Controller
 {
@@ -75,7 +75,7 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        $model = new LoginForm();
+        $model = new LoginFormRequest();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         }
@@ -105,7 +105,7 @@ class SiteController extends Controller
      */
     public function actionContact()
     {
-        $model = new ContactForm();
+        $model = new ContactFormRequest();
         if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
             Yii::$app->session->setFlash('contactFormSubmitted');
 

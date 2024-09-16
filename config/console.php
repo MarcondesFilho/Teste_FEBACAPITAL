@@ -7,7 +7,7 @@ $config = [
     'id' => 'basic-console',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
-    'controllerNamespace' => 'app\commands',
+    'controllerNamespace' => 'app\src\Application\Commands',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -28,13 +28,13 @@ $config = [
         'db' => $db,
     ],
     'params' => $params,
-    /*
+    
     'controllerMap' => [
-        'fixture' => [ // Fixture generation command line.
-            'class' => 'yii\faker\FixtureController',
+        'migrate' => [
+            'class' => 'yii\console\controllers\MigrateController',
+            'migrationPath' => '@app/src/Infrastructure/Migrations',
         ],
     ],
-    */
 ];
 
 if (YII_ENV_DEV) {
