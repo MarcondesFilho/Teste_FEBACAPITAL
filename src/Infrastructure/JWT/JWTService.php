@@ -3,6 +3,7 @@
 namespace src\Infrastructure\JWT;
 
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Yii;
 
 class JWTService
