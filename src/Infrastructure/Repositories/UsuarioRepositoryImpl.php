@@ -11,9 +11,9 @@ class UsuarioRepositoryImpl implements UsuarioRepository
     public function save(UsuarioEntity $usuario): bool
     {
         $usuarioAR = new UsuarioAR();
-        $usuarioAR->login = $usuario->getUsername(); // Correção aplicada
-        $usuarioAR->senha = $usuario->getPassword(); // Correção aplicada
-        $usuarioAR->nome = $usuario->getName();      // Correção aplicada
+        $usuarioAR->login = $usuario->getUsername();
+        $usuarioAR->senha = $usuario->getPassword();
+        $usuarioAR->nome = $usuario->getName(); 
         
         return $usuarioAR->save();
     }

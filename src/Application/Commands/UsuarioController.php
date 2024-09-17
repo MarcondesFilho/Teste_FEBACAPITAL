@@ -6,15 +6,13 @@ use Yii;
 use yii\console\Controller;
 use src\Domain\Entities\Usuario;
 use src\Domain\Repositories\UsuarioRepository;
-use src\Application\Services\AuthService;
 
 class UsuarioController extends Controller
 {
     private $usuarioRepository;
 
-    public function __construct($id, $module, UsuarioRepository $usuarioRepository, AuthService $authService, $config = [])
+    public function __construct($id, $module, UsuarioRepository $usuarioRepository, $config = [])
     {
-        $this->authService = $authService;
         $this->usuarioRepository = $usuarioRepository;
         parent::__construct($id, $module, $config);
     }
@@ -33,16 +31,6 @@ class UsuarioController extends Controller
         }
     }
 
-    public function actionLogin($login, $senha)
-    {
-        $token = $this->authService->authenticate($login, $senha);
-
-        if ($token) {
-            echo "Login realizado com sucesso. Token: $token\n";
-        } else {
-            echo "Falha no login. Credenciais incorretas.\n";
-        }
-    }
 }
 
     

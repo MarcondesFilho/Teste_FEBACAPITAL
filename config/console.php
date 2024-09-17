@@ -34,10 +34,6 @@ $config = [
             'class' => 'yii\console\controllers\MigrateController',
             'migrationPath' => '@app/src/Infrastructure/Migrations',
         ],
-        'usuario' => [
-            'class' => 'src\Application\Commands\UsuarioController',
-            'authService' => 'src\Application\Services\AuthService',
-        ],
     ],
     'container' => [
         'definitions' => [
