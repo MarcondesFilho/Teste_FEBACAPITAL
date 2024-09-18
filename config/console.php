@@ -12,6 +12,7 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
         '@tests' => '@app/tests',
+        '@src'   => '@app/src',
     ],
     'components' => [
         'cache' => [
@@ -30,9 +31,12 @@ $config = [
     'params' => $params,
     
     'controllerMap' => [
-        'migrate' => [
-            'class' => 'yii\console\controllers\MigrateController',
-            'migrationPath' => '@app/src/Infrastructure/Migrations',
+            'usuario' => [
+                'class' => 'src\Application\Commands\UsuarioController',
+            'migrate' => [
+                'class' => 'yii\console\controllers\MigrateController',
+                'migrationPath' => '@app/src/Infrastructure/Migrations',
+            ],
         ],
     ],
     'container' => [

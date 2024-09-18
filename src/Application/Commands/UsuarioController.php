@@ -6,6 +6,7 @@ use Yii;
 use yii\console\Controller;
 use src\Domain\Entities\Usuario;
 use src\Domain\Repositories\UsuarioRepository;
+use src\Interfaces\Http\Requests\LoginRequest;
 
 class UsuarioController extends Controller
 {
@@ -15,6 +16,18 @@ class UsuarioController extends Controller
     {
         $this->usuarioRepository = $usuarioRepository;
         parent::__construct($id, $module, $config);
+    }
+
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+
+        // Adiciona o filtro de autenticação via JWT
+        $behaviors['authenticator'] = [
+            'class' => \yii\filters\auth\HttpBearerAuth::class,
+        ];
+
+        return $behaviors;
     }
 
     public function actionCreate($login, $senha, $nome)

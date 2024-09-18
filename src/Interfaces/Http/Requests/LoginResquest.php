@@ -6,15 +6,15 @@ use yii\base\Model;
 
 class LoginRequest extends Model
 {
-    public $username;
-    public $password;
+    public $login;
+    public $senha;
 
     public function rules()
     {
         return [
-            [['username', 'password'], 'required'],
-            ['username', 'string'],
-            ['password', 'string'],
+            [['login', 'senha'], 'required'],
+            ['login', 'string'],
+            ['senha', 'string'],
         ];
     }
 }

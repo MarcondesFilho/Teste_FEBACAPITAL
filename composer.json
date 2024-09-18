@@ -22,7 +22,8 @@
         "league/flysystem": "^3.28",
         "league/flysystem-aws-s3-v3": "^3.28",
         "guzzlehttp/guzzle": "^7.9",
-        "firebase/php-jwt": "^6.10"
+        "firebase/php-jwt": "^6.10",
+        "sizeg/yii2-jwt": "^1.2"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

@@ -1,15 +1,20 @@
 <?php
 
+use sizeg\jwt\Jwt;
+use yii\rest\UrlRule;
+use yii\web\JsonParser;
+
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
 $config = [
-    'id' => 'console-app',
+    'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+        '@src'   => '@app/src',
     ],
     'container' => [
         'definitions' => [
@@ -20,18 +25,32 @@ $config = [
         'urlManager' => [
         'enablePrettyUrl' => true,
         'showScriptName' => false,
-        'rules' => [],
+        'enableStrictParsing' => true,
+        'rules' => [
+            ['class' => UrlRule::class, 'controller' => ['auth', 'cliente', 'livro']],
+        ],
         ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'olmXn7opFVmTRplfb9yl4TRBedoDFiq9',
+            'parsers' => [
+                'application/json' => JsonParser::class,
+            ],
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
+            'identityClass' => 'src\Domain\Entities\Usuario',
+            'enableAutoLogin' => false,
+            'enableSession' => false,
+            'authMethods' => [
+                src\Infrastructure\JWT\JwtHttpBearerAuth::class, // Autenticação via JWT Bearer
+            ],
+        ],
+        'jwt' => [
+            'class' => Jwt::class,
+            'key'   => 'FEBACAPITAL', // Chave secreta para geração de tokens
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -52,30 +71,6 @@ $config = [
             ],
         ],
         'db' => $db,
-        
-    'urlManager' => [
-        'enablePrettyUrl' => true,  
-        'showScriptName' => false,  
-        'enableStrictParsing' => true, 
-        'rules' => [
-            // Rota para Clientes
-            'GET api/clientes' => 'cliente/index',          // Listar todos os clientes
-            'GET api/clientes/<id:\d+>' => 'cliente/view',  // Visualizar um cliente específico
-            'POST api/clientes' => 'cliente/create',        // Criar um novo cliente
-            'PUT api/clientes/<id:\d+>' => 'cliente/update',// Atualizar um cliente
-            'DELETE api/clientes/<id:\d+>' => 'cliente/delete', // Excluir um cliente
-
-            // Rota para Livros
-            'GET api/livros' => 'livro/index',              // Listar todos os livros
-            'GET api/livros/<id:\d+>' => 'livro/view',      // Visualizar um livro específico
-            'POST api/livros' => 'livro/create',            // Criar um novo livro
-            'PUT api/livros/<id:\d+>' => 'livro/update',    // Atualizar um livro
-            'DELETE api/livros/<id:\d+>' => 'livro/delete', // Excluir um livro
-
-            // Rota para Autenticação
-            'POST api/login' => 'auth/login',               // Rota para fazer login e gerar JWT
-        ],
-],
     ],
     'params' => $params,
 ];
