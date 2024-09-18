@@ -7,12 +7,20 @@ use Yii;
 use yii\rest\ActiveController;
 use src\Infrastructure\JWT\JWTService;
 use src\Domain\Entities\Usuario;
+use yii\web\Response;
 
 class AuthController extends ActiveController
 {
     public function behaviors()
     {
         $behaviors = parent::behaviors();
+        $behaviors['verbs'] = [
+            'class' => \yii\filters\VerbFilter::class,
+            'actions' => [
+                'login' => ['post'],
+                'register' => ['post'],
+            ],
+        ];
         $behaviors['authenticator'] = [
             'class' => JWTService::class,
             'except' => ['login'],
@@ -26,13 +34,6 @@ class AuthController extends ActiveController
     {
         $this->authService = $authService;
         parent::__construct($id, $module, $config);
-    }
-
-    public function actions()
-    {
-        $actions = parent::actions();
-        // Personalizar ou desabilitar ações, se necessário
-        return $actions;
     }
 
     public function actionRegister($login, $senha, $nome)
@@ -51,17 +52,17 @@ class AuthController extends ActiveController
 
     public function actionLogin()
     {
-        $request = Yii::$app->request;
-        $login = $request->post('login');
-        $senha = $request->post('senha');
-
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $request = Yii::$app->request->post();
+        $login = $request['login'] ?? '';
+        $senha = $request['senha'] ?? '';
+        
         $token = $this->authService->authenticate($login, $senha);
-
-        if ($token) {
-            return ['status' => 'success', 'token' => $token];
+        if (!$token) {
+            return ['error' => 'Credenciais inválidas'];
         }
 
-        return $this->asJson(['error' => 'Credenciais inválidas'], 401);
+        return ['token' => $token];
     }
 
     public function actionUpdate($id)

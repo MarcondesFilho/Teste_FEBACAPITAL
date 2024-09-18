@@ -67,7 +67,7 @@ $config = [
             ],
         ],
         'jwt' => [
-            'class' => Jwt::class,
+            'class' => 'src\Infrastructure\JWT\JWTService',
             'key'   => 'FEBACAPITAL', // Chave secreta para geração de tokens
         ],
         'errorHandler' => [
@@ -90,6 +90,11 @@ $config = [
             ],
         ],
         'db' => $db,
+    ],
+    'modules' => [
+        'api' => [
+            'class' => 'yii\rest\Module',
+        ],
     ],
     'params' => $params,
 ];
