@@ -45,7 +45,7 @@ $config = [
             'enableAutoLogin' => false,
             'enableSession' => false,
             'authMethods' => [
-                src\Infrastructure\JWT\JwtHttpBearerAuth::class, // Autenticação via JWT Bearer
+                src\Infrastructure\JWT\JWTService::class, // Autenticação via JWT Bearer
             ],
         ],
         'jwt' => [

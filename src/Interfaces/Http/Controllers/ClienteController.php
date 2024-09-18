@@ -19,6 +19,15 @@ class ClienteController extends Controller
         parent::__construct($id, $module, $config);
     }
 
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class' => \sizeg\jwt\JwtHttpBearerAuth::class,
+        ];
+        return $behaviors;
+    }
+
     public function actionCreate()
     {
         $request = Yii::$app->request->post();
