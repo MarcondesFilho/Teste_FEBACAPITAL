@@ -23,6 +23,13 @@ class ClienteController extends ActiveController
         parent::__construct($id, $module, $config);
     }
 
+    public function actions()
+    {
+        $actions = parent::actions();
+        // Personalizar ou desabilitar ações, se necessário
+        return $actions;
+    }
+
     public function behaviors()
     {
         $behaviors = parent::behaviors();

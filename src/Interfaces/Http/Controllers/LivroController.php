@@ -36,6 +36,13 @@ class LivroController extends ActiveController
         return $behaviors;
     }
 
+    public function actions()
+    {
+        $actions = parent::actions();
+        // Personalizar ou desabilitar ações, se necessário
+        return $actions;
+    }
+
     public function actionIndex()
     {
         return new ActiveDataProvider([

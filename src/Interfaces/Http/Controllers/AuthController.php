@@ -5,31 +5,18 @@ namespace src\Interfaces\Http\Controllers;
 use src\Application\Services\AuthService;
 use Yii;
 use yii\rest\ActiveController;
-use yii\filters\auth\HttpBearerAuth;
 use src\Infrastructure\JWT\JWTService;
-use yii\web\Response;
+use src\Domain\Entities\Usuario;
 
 class AuthController extends ActiveController
 {
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-        
-        // Desabilita a autenticação para a rota de login
-        $behaviors['authenticator']['except'] = ['login'];
-
-        // Opcional: Configuração de controle de acesso
-        $behaviors['access'] = [
-            'class' => \yii\filters\AccessControl::class,
-            'rules' => [
-                [
-                    'allow' => true,
-                    'actions' => ['login'],
-                    'roles' => ['?'], // '?' significa visitantes (usuários não autenticados)
-                ],
-            ],
+        $behaviors['authenticator'] = [
+            'class' => JWTService::class,
+            'except' => ['login'],
         ];
-        
         return $behaviors;
     }
 
@@ -41,13 +28,32 @@ class AuthController extends ActiveController
         parent::__construct($id, $module, $config);
     }
 
+    public function actions()
+    {
+        $actions = parent::actions();
+        // Personalizar ou desabilitar ações, se necessário
+        return $actions;
+    }
+
+    public function actionRegister($login, $senha, $nome)
+    {
+        // Aqui passamos os argumentos corretos para o construtor de Usuario
+        $usuario = new Usuario($login, Yii::$app->getSecurity()->generatePasswordHash($senha), $nome);
+
+        if ($this->usuarioRepository->save($usuario)) {
+            echo "Usuário {$login} criado com sucesso.\n";
+            return 0;  // Código de sucesso
+        } else {
+            echo "Erro ao criar o usuário.\n";
+            return 1;  // Código de erro
+        }
+    }
+
     public function actionLogin()
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $request = Yii::$app->request->post();
-        $login = $request['login'] ?? null;
-        $senha = $request['senha'] ?? null;
+        $request = Yii::$app->request;
+        $login = $request->post('login');
+        $senha = $request->post('senha');
 
         $token = $this->authService->authenticate($login, $senha);
 

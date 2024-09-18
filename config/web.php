@@ -3,6 +3,7 @@
 use sizeg\jwt\Jwt;
 use yii\rest\UrlRule;
 use yii\web\JsonParser;
+use yii\filters\auth\HttpBearerAuth;
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
@@ -28,23 +29,23 @@ $config = [
             'enableStrictParsing' => true,
             'rules' => [
                 ['class' => UrlRule::class, 'controller' => ['auth', 'usuario', 'cliente', 'livro'], 'pluralize' => false],
-                // Rotas para clientes
-                'POST /api/clientes' => 'cliente/create',
-                'GET /api/clientes' => 'cliente/index',
-                'GET /api/clientes/<id>' => 'cliente/view',
-                'PUT /api/clientes/<id>' => 'cliente/update',
-                'DELETE /api/clientes/<id>' => 'cliente/delete',
-
-                // Rotas para livros
-                'POST /api/livros' => 'livro/create',
-                'GET /api/livros' => 'livro/index',
-                'GET /api/livros/<id>' => 'livro/view',
-                'PUT /api/livros/<id>' => 'livro/update',
-                'DELETE /api/livros/<id>' => 'livro/delete',
-
-                // Autenticação
-                'POST /api/login' => 'auth/login',
-                'POST /api/register' => 'usuario/create',
+                // Rotas RESTful para o controlador de autenticação
+                'POST api/login' => 'auth/login',
+                'POST api/register' => 'auth/register',
+                
+                // Rotas RESTful para o controlador de clientes
+                'GET api/clientes' => 'cliente/index',
+                'POST api/clientes' => 'cliente/create',
+                'GET api/clientes/<id:\d+>' => 'cliente/view',
+                'PUT api/clientes/<id:\d+>' => 'cliente/update',
+                'DELETE api/clientes/<id:\d+>' => 'cliente/delete',
+                
+                // Rotas RESTful para o controlador de livros
+                'GET api/livros' => 'livro/index',
+                'POST api/livros' => 'livro/create',
+                'GET api/livros/<id:\d+>' => 'livro/view',
+                'PUT api/livros/<id:\d+>' => 'livro/update',
+                'DELETE api/livros/<id:\d+>' => 'livro/delete',
             ],
         ],
         'request' => [
@@ -61,6 +62,9 @@ $config = [
             'identityClass' => 'src\Domain\Entities\Usuario',
             'enableAutoLogin' => false,
             'enableSession' => false,
+            'authMethods' => [
+                HttpBearerAuth::class, // Autenticação via Bearer Token
+            ],
         ],
         'jwt' => [
             'class' => Jwt::class,
