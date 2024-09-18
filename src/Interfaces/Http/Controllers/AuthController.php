@@ -4,10 +4,24 @@ namespace src\Interfaces\Http\Controllers;
 
 use src\Application\Services\AuthService;
 use Yii;
-use yii\web\Controller;
+use yii\filters\auth\HttpBearerAuth;
+use src\Infrastructure\JWT\JWTService;
 
-class AuthController extends Controller
+class AuthController extends \yii\rest\Controller
 {
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        
+        // Adicionando autenticação via JWT
+        $behaviors['authenticator'] = [
+            'class' => HttpBearerAuth::className(),
+            'auth' => [JWTService::class, 'authenticate'], // Use o serviço JWT que você criou para autenticação
+        ];
+
+        return $behaviors;
+    }
+
     private AuthService $authService;
 
     public function __construct($id, $module, AuthService $authService, $config = [])
