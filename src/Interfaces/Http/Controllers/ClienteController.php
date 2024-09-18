@@ -5,7 +5,7 @@ namespace src\Interfaces\Http\Controllers;
 use src\Application\Services\ClienteService;
 use src\Interfaces\Http\Requests\ClienteRequest;
 use Yii;
-use yii\web\Controller;
+use yii\rest\ActiveController;
 use yii\web\UploadedFile;
 use yii\web\NotFoundHttpException;
 use yii\filters\auth\HttpBearerAuth;
@@ -13,7 +13,7 @@ use src\Infrastructure\JWT\JWTService;
 use yii\data\ActiveDataProvider;
 use src\Infrastructure\ActiveRecord\ClienteAR;
 
-class ClienteController extends Controller
+class ClienteController extends ActiveController
 {
     private ClienteService $clienteService;
 

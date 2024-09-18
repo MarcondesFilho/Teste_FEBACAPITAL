@@ -27,7 +27,7 @@ $config = [
             'showScriptName' => false,
             'enableStrictParsing' => true,
             'rules' => [
-                ['class' => UrlRule::class, 'controller' => ['auth', 'cliente', 'livro']],
+                ['class' => UrlRule::class, 'controller' => ['auth', 'usuario', 'cliente', 'livro'], 'pluralize' => false],
                 // Rotas para clientes
                 'POST /api/clientes' => 'cliente/create',
                 'GET /api/clientes' => 'cliente/index',

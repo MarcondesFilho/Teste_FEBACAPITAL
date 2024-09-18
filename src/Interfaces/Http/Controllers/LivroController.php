@@ -6,14 +6,14 @@ use src\Application\Services\LivroService;
 use src\Interfaces\Http\Requests\LivroRequest;
 use yii\web\NotFoundHttpException;
 use Yii;
-use yii\web\Controller;
+use yii\rest\ActiveController;
 use yii\web\UploadedFile;
 use yii\filters\auth\HttpBearerAuth;
 use src\Infrastructure\JWT\JWTService;
 use src\Infrastructure\ActiveRecord\LivroAR;
 use yii\data\ActiveDataProvider;
 
-class LivroController extends Controller
+class LivroController extends ActiveController
 {
     private LivroService $livroService;
 

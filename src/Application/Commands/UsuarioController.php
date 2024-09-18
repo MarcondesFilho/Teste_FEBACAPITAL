@@ -3,13 +3,13 @@
 namespace src\Application\Commands;
 
 use Yii;
-use yii\console\Controller;
+use yii\rest\ActiveController;
 use src\Domain\Entities\Usuario;
 use src\Domain\Repositories\UsuarioRepository;
 use yii\filters\auth\HttpBearerAuth;
 use src\Infrastructure\JWT\JWTService;
 
-class UsuarioController extends Controller
+class UsuarioController extends ActiveController
 {
     private $usuarioRepository;
 

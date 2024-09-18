@@ -4,11 +4,12 @@ namespace src\Interfaces\Http\Controllers;
 
 use src\Application\Services\AuthService;
 use Yii;
+use yii\rest\ActiveController;
 use yii\filters\auth\HttpBearerAuth;
 use src\Infrastructure\JWT\JWTService;
 use yii\web\Response;
 
-class AuthController extends \yii\rest\Controller
+class AuthController extends ActiveController
 {
     public function behaviors()
     {
