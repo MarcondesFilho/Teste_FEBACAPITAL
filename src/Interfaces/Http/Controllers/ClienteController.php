@@ -8,6 +8,10 @@ use Yii;
 use yii\web\Controller;
 use yii\web\UploadedFile;
 use yii\web\NotFoundHttpException;
+use yii\filters\auth\HttpBearerAuth;
+use src\Infrastructure\JWT\JWTService;
+use yii\data\ActiveDataProvider;
+use src\Infrastructure\ActiveRecord\ClienteAR;
 
 class ClienteController extends Controller
 {
@@ -22,10 +26,22 @@ class ClienteController extends Controller
     public function behaviors()
     {
         $behaviors = parent::behaviors();
+        
+        // Adicionando autenticação via JWT
         $behaviors['authenticator'] = [
-            'class' => \sizeg\jwt\JwtHttpBearerAuth::class,
+            'class' => HttpBearerAuth::class,
+            'auth' => [JWTService::class, 'authenticate'], // Use o serviço JWT que você criou para autenticação
         ];
+
         return $behaviors;
+    }
+
+    public function actionIndex()
+    {
+        return new ActiveDataProvider([
+            'query' => ClienteAR::find(),
+            'pagination' => ['pageSize' => 20],
+        ]);
     }
 
     public function actionCreate()
@@ -67,5 +83,15 @@ class ClienteController extends Controller
 
         $clientes = $this->clienteService->listarClientes($limit, $offset, $orderBy, $filterBy);
         return $this->asJson(['clientes' => $clientes]);
+    }
+
+    public function actionDelete($id)
+    {
+        $cliente = ClienteAR::findOne($id);
+        if (!$cliente) {
+            throw new \yii\web\NotFoundHttpException("Cliente não encontrado");
+        }
+        $cliente->delete();
+        return ['status' => 'Cliente deletado'];
     }
 }

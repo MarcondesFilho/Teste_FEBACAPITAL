@@ -8,6 +8,10 @@ use yii\web\NotFoundHttpException;
 use Yii;
 use yii\web\Controller;
 use yii\web\UploadedFile;
+use yii\filters\auth\HttpBearerAuth;
+use src\Infrastructure\JWT\JWTService;
+use src\Infrastructure\ActiveRecord\LivroAR;
+use yii\data\ActiveDataProvider;
 
 class LivroController extends Controller
 {
@@ -22,10 +26,22 @@ class LivroController extends Controller
     public function behaviors()
     {
         $behaviors = parent::behaviors();
+        
+        // Adicionando autenticação via JWT
         $behaviors['authenticator'] = [
-            'class' => \sizeg\jwt\JwtHttpBearerAuth::class,
+            'class' => HttpBearerAuth::class,
+            'auth' => [JWTService::class, 'authenticate'], // Use o serviço JWT que você criou para autenticação
         ];
+
         return $behaviors;
+    }
+
+    public function actionIndex()
+    {
+        return new ActiveDataProvider([
+            'query' => LivroAR::find(),
+            'pagination' => ['pageSize' => 20],
+        ]);
     }
 
     public function actionCreate()
@@ -67,5 +83,15 @@ class LivroController extends Controller
 
         $livros = $this->livroService->listarLivros($limit, $offset, $orderBy, $filterBy);
         return $this->asJson(['livros' => $livros]);
+    }
+
+    public function actionDelete($id)
+    {
+        $cliente = LivroAR::findOne($id);
+        if (!$cliente) {
+            throw new \yii\web\NotFoundHttpException("Cliente não encontrado");
+        }
+        $cliente->delete();
+        return ['status' => 'Cliente deletado'];
     }
 }

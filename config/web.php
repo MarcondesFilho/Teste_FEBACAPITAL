@@ -23,12 +23,29 @@ $config = [
     ],
     'components' => [
         'urlManager' => [
-        'enablePrettyUrl' => true,
-        'showScriptName' => false,
-        'enableStrictParsing' => true,
-        'rules' => [
-            ['class' => UrlRule::class, 'controller' => ['auth', 'cliente', 'livro']],
-        ],
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'enableStrictParsing' => true,
+            'rules' => [
+                ['class' => UrlRule::class, 'controller' => ['auth', 'cliente', 'livro']],
+                // Rotas para clientes
+                'POST /api/clientes' => 'cliente/create',
+                'GET /api/clientes' => 'cliente/index',
+                'GET /api/clientes/<id>' => 'cliente/view',
+                'PUT /api/clientes/<id>' => 'cliente/update',
+                'DELETE /api/clientes/<id>' => 'cliente/delete',
+
+                // Rotas para livros
+                'POST /api/livros' => 'livro/create',
+                'GET /api/livros' => 'livro/index',
+                'GET /api/livros/<id>' => 'livro/view',
+                'PUT /api/livros/<id>' => 'livro/update',
+                'DELETE /api/livros/<id>' => 'livro/delete',
+
+                // Autenticação
+                'POST /api/login' => 'auth/login',
+                'POST /api/register' => 'usuario/create',
+            ],
         ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -50,7 +67,8 @@ $config = [
             'key'   => 'FEBACAPITAL', // Chave secreta para geração de tokens
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'class' => 'yii\web\ErrorHandler',
+            'errorAction' => null,
         ],
         'mailer' => [
             'class' => \yii\symfonymailer\Mailer::class,
