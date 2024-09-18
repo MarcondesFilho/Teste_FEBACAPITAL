@@ -6,6 +6,7 @@ use src\Application\Services\AuthService;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use src\Infrastructure\JWT\JWTService;
+use yii\web\Response;
 
 class AuthController extends \yii\rest\Controller
 {
@@ -13,12 +14,21 @@ class AuthController extends \yii\rest\Controller
     {
         $behaviors = parent::behaviors();
         
-        // Adicionando autenticação via JWT
-        $behaviors['authenticator'] = [
-            'class' => HttpBearerAuth::class,
-            'auth' => [JWTService::class, 'authenticate'], // Use o serviço JWT que você criou para autenticação
-        ];
+        // Desabilita a autenticação para a rota de login
+        $behaviors['authenticator']['except'] = ['login'];
 
+        // Opcional: Configuração de controle de acesso
+        $behaviors['access'] = [
+            'class' => \yii\filters\AccessControl::class,
+            'rules' => [
+                [
+                    'allow' => true,
+                    'actions' => ['login'],
+                    'roles' => ['?'], // '?' significa visitantes (usuários não autenticados)
+                ],
+            ],
+        ];
+        
         return $behaviors;
     }
 
@@ -32,12 +42,16 @@ class AuthController extends \yii\rest\Controller
 
     public function actionLogin()
     {
-        $request = Yii::$app->request->post();
+        Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $token = $this->authService->authenticate($request['username'], $request['password']);
+        $request = Yii::$app->request->post();
+        $login = $request['login'] ?? null;
+        $senha = $request['senha'] ?? null;
+
+        $token = $this->authService->authenticate($login, $senha);
 
         if ($token) {
-            return $this->asJson(['token' => $token]);
+            return ['status' => 'success', 'token' => $token];
         }
 
         return $this->asJson(['error' => 'Credenciais inválidas'], 401);
