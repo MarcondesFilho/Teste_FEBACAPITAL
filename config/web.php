@@ -61,6 +61,9 @@ $config = [
             'identityClass' => 'src\Domain\Entities\Usuario',
             'enableAutoLogin' => false,
             'enableSession' => false,
+            'authMethods' => [
+                'yii\filters\auth\HttpBearerAuth',  // Certifique-se de que não há parâmetros incorretos
+            ],
         ],
         'jwt' => [
             'class' => Jwt::class,

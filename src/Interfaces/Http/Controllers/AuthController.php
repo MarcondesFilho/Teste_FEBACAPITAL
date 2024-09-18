@@ -15,7 +15,7 @@ class AuthController extends \yii\rest\Controller
         
         // Adicionando autenticação via JWT
         $behaviors['authenticator'] = [
-            'class' => HttpBearerAuth::className(),
+            'class' => HttpBearerAuth::class,
             'auth' => [JWTService::class, 'authenticate'], // Use o serviço JWT que você criou para autenticação
         ];
 
