@@ -2,11 +2,12 @@
 
 namespace src\Infrastructure\JWT;
 
+use yii\filters\auth\HttpBearerAuth;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Yii;
 
-class JWTService
+class JWTService extends HttpBearerAuth
 {
     private $key;
     private $issuer;
@@ -15,8 +16,8 @@ class JWTService
     public function __construct()
     {
         $this->key = Yii::$app->params['jwtSecretKey'];
-        $this->issuer = 'https://meusistema.com'; // Domínio configurado para o emissor
-        $this->audience = 'https://meusistema.com'; // Domínio para quem o token é destinado (audience)
+        $this->issuer = 'febacapital'; // Domínio configurado para o emissor
+        $this->audience = 'febacapital_app'; // Domínio para quem o token é destinado (audience)
     }
 
     public function generateToken($userId)
@@ -49,5 +50,32 @@ class JWTService
             // Lidar com exceção de token inválido ou expirado
             return false;
         }
+    }
+
+    public function authenticate($user, $request, $response)
+    {
+        $authHeader = $request->getHeaders()->get('Authorization');
+        if ($authHeader !== null && preg_match('/^Bearer\s+(.*?)$/', $authHeader, $matches)) {
+            $token = $matches[1];
+            try {
+                $decoded = $this->validateToken($token);
+
+                if (!$decoded) {
+                    $response->setStatusCode(401, 'Token inválido');
+                    return null;
+                }
+
+                // Se o token for válido, busca o usuário pelo ID (sub)
+                $identity = $user->loginByAccessToken($decoded['sub'], get_class($this));
+                if ($identity) {
+                    return $identity;
+                }
+            } catch (\Exception $e) {
+                $response->setStatusCode(401, 'Token inválido');
+                return null;
+            }
+        }
+
+        return null;
     }
 }
