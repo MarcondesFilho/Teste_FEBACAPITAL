@@ -8,30 +8,30 @@ use yii\rest\Controller;
 use app\models\Cliente;
 use app\services\ClienteService;
 use yii\web\HttpException;
-use yii\filters\auth\HttpBearerAuth;
+use app\services\JWTService;
 
 class ClienteController extends Controller
 {
     private $clienteService;
-    private $imageUploadService;
+    private $jwtService;
 
-    public function __construct($id, $module, ClienteService $clienteService, $config = [])
+    public function __construct($id, $module, ClienteService $clienteService, JWTService $jwtService, $config = [])
     {
         $this->clienteService = $clienteService;
+        $this->jwtService = $jwtService;
         parent::__construct($id, $module, $config);
     }
 
-    public function behaviors()
+    private function validateToken()
     {
-        $behaviors = parent::behaviors();
-        $behaviors['authenticator'] = [
-            'class' => HttpBearerAuth::class,
-        ];
-        return $behaviors;
+        $token = $this->jwtService->getTokenFromHeader();
+        $this->jwtService->validateToken($token);
     }
 
     public function actionCreate()
     {
+        $this->validateToken();
+
         $request = Yii::$app->request->post();
         
         $cliente = new Cliente();
@@ -49,10 +49,11 @@ class ClienteController extends Controller
         $imageFile = UploadedFile::getInstanceByName('imagem');
         if ($imageFile && $imageFile->size <= 2097152) { // Max 2MB
             $cliente->imagem = $this->clienteService->uploadImage($imageFile);
-        } else {
-            return $this->asJson(['error' => 'Invalid image or exceeded size limit.'])
-                ->setStatusCode(400);
-        }
+        } 
+        // else {
+        //     return $this->asJson(['error' => 'Invalid image or exceeded size limit.'])
+        //         ->setStatusCode(400);
+        // }
 
         if ($cliente->validate() && $cliente->save()) {
             return $this->asJson(['message' => 'Cliente cadastrado com sucesso'])
@@ -65,6 +66,8 @@ class ClienteController extends Controller
 
     public function actionIndex()
     {
+        $this->validateToken();
+
         $params = Yii::$app->request->queryParams;
 
         try {
@@ -79,6 +82,8 @@ class ClienteController extends Controller
 
     public function actionView($login)
     {
+        $this->validateToken();
+
         $cliente = Cliente::findOne($login);
         if ($cliente) {
             return $this->asJson($cliente)
@@ -90,6 +95,8 @@ class ClienteController extends Controller
 
     public function actionUpdate($id)
     {
+        $this->validateToken();
+
         $cliente = Cliente::findOne($id);
         if (!$cliente) {
             throw new HttpException(404, 'Cliente não encontrado');
@@ -109,6 +116,8 @@ class ClienteController extends Controller
 
     public function actionDelete($id)
     {
+        $this->validateToken();
+
         $cliente = Cliente::findOne($id);
         if ($cliente && $cliente->delete()) {
             return $this->asJson(['message' => 'Cliente deletado com sucesso'])

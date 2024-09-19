@@ -5,6 +5,7 @@ namespace app\services;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Yii;
+use yii\web\UnauthorizedHttpException;
 
 class JWTService
 {
@@ -33,7 +34,16 @@ class JWTService
         try {
             return JWT::decode($token, new Key($this->key, 'HS256'));
         } catch (\Exception $e) {
-            return false;
+            throw new UnauthorizedHttpException('Token inválido ou expirado');
         }
+    }
+
+    public function getTokenFromHeader()
+    {
+        $authHeader = Yii::$app->request->getHeaders()->get('Authorization');
+        if ($authHeader !== null && preg_match('/^Bearer\s+(.*?)$/', $authHeader, $matches)) {
+            return $matches[1];
+        }
+        throw new UnauthorizedHttpException('Token não encontrado no cabeçalho');
     }
 }
