@@ -8,7 +8,7 @@ use yii\rest\Controller;
 use app\models\Livro;
 use app\services\LivroService;
 use yii\web\HttpException;
-use yii\filters\auth\HttpBearerAuth;
+use app\services\JWTService;
 
 class LivroController extends Controller
 {
@@ -23,8 +23,8 @@ class LivroController extends Controller
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-        $behaviors['authenticator'] = [
-            'class' => HttpBearerAuth::class,
+        $behaviors['validateToken'] = [
+            'class' => JWTService::class,
         ];
         return $behaviors;
     }
