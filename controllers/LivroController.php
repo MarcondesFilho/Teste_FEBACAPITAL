@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use yii\web\UploadedFile;
 use yii\rest\Controller;
 use app\models\Livro;
 use app\services\LivroService;

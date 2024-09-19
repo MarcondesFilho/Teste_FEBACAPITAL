@@ -88,7 +88,7 @@ $config = [
                         'key' => 'YOUR_AWS_KEY',
                         'secret' => 'YOUR_AWS_SECRET',
                     ],
-                    'region' => 'us-east-1', // Your bucket's region
+                    'region' => 'us-east-1',
                     'version' => 'latest',
                 ]);
 
