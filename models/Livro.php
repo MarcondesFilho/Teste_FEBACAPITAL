@@ -3,7 +3,6 @@
 namespace app\models;
 
 use yii\db\ActiveRecord;
-use yii\web\UploadedFile;
 
 class Livro extends ActiveRecord
 {
@@ -18,10 +17,27 @@ class Livro extends ActiveRecord
     {
         return [
             [['isbn', 'titulo', 'autor', 'preco', 'estoque'], 'required'],
-            ['isbn', 'match', 'pattern' => '/^\d{3}-\d{10}$/', 'message' => 'Formato de ISBN inválido'],
-            ['preco', 'number', 'min' => 0, 'message' => 'Preço deve ser positivo'],
-            ['estoque', 'integer', 'min' => 0, 'message' => 'Estoque deve ser um número inteiro'],
-            [['imagemFile'], 'file', 'extensions' => 'jpg, png', 'maxSize' => 1024 * 1024 * 2, 'tooBig' => 'Tamanho máximo permitido é 2MB'],
+            [['preco'], 'number'],
+            [['estoque'], 'integer'],
+            [['imagem'], 'string'],
+            [['isbn'], 'string', 'max' => 13],
+            [['titulo', 'autor'], 'string', 'max' => 255],
+            [['created_at', 'updated_at'], 'safe'],
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'isbn' => 'ISBN',
+            'titulo' => 'Título',
+            'autor' => 'Autor',
+            'preco' => 'Preço',
+            'estoque' => 'Estoque',
+            'imagem' => 'Imagem',
+            'created_at' => 'Criado em',
+            'updated_at' => 'Atualizado em',
         ];
     }
 }

@@ -14,13 +14,6 @@ class Cliente extends ActiveRecord
         return 'cliente';
     }
 
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::class,
-        ];
-    }
-
     public function rules()
     {
         return [

@@ -7,7 +7,7 @@ use yii\web\UploadedFile;
 use yii\rest\Controller;
 use app\models\Cliente;
 use app\services\ClienteService;
-use yii\web\BadRequestHttpException;
+use yii\web\HttpException;
 
 class ClienteController extends Controller
 {
@@ -40,14 +40,17 @@ class ClienteController extends Controller
         if ($imageFile && $imageFile->size <= 2097152) { // Max 2MB
             $cliente->imagem = $this->clienteService->uploadImage($imageFile);
         } else {
-            throw new BadRequestHttpException('Imagem inválida ou tamanho excedido.');
-        }
-        
-        if ($cliente->validateCep($cliente->cep) && $cliente->validate() && $cliente->save()) {
-            return ['message' => 'Cliente cadastrado com sucesso', 'image' => $cliente->imagem];
+            return $this->asJson(['error' => 'Invalid image or exceeded size limit.'])
+                ->setStatusCode(400);
         }
 
-        throw new BadRequestHttpException('Erro ao cadastrar o cliente');
+        if ($cliente->validate() && $cliente->save()) {
+            return $this->asJson(['message' => 'Cliente cadastrado com sucesso'])
+                ->setStatusCode(201);
+        }
+
+        return $this->asJson($cliente->errors)
+            ->setStatusCode(400);
     }
 
     public function actionIndex()
@@ -56,9 +59,52 @@ class ClienteController extends Controller
 
         try {
             $clientes = $this->clienteService->listarClientes($params);
-            return ['data' => $clientes];
+            return $this->asJson(['data' => $clientes])
+            ->setStatusCode(200);
         } catch (\Exception $e) {
-            throw new BadRequestHttpException($e->getMessage());
+            return $this->asJson(['error' => $e->getMessage()])
+            ->setStatusCode(400);
         }
+    }
+
+    public function actionView($login)
+    {
+        $cliente = Cliente::findOne($login);
+        if ($cliente) {
+            return $this->asJson($cliente)
+                ->setStatusCode(200);
+        }
+
+        throw new HttpException(404, 'Cliente não encontrado');
+    }
+
+    public function actionUpdate($id)
+    {
+        $cliente = Cliente::findOne($id);
+        if (!$cliente) {
+            throw new HttpException(404, 'Cliente não encontrado');
+        }
+
+        $request = Yii::$app->request->post();
+        $cliente->attributes = $request;
+
+        if ($cliente->validate() && $cliente->save()) {
+            return $this->asJson(['message' => 'Cliente atualizado com sucesso'])
+                ->setStatusCode(200);
+        }
+
+        return $this->asJson($cliente->errors)
+            ->setStatusCode(400);
+    }
+
+    public function actionDelete($id)
+    {
+        $cliente = Cliente::findOne($id);
+        if ($cliente && $cliente->delete()) {
+            return $this->asJson(['message' => 'Cliente deletado com sucesso'])
+                ->setStatusCode(204);
+        }
+
+        throw new HttpException(404, 'Cliente não encontrado');
     }
 }

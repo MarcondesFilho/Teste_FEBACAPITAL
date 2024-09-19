@@ -54,9 +54,9 @@ $config = [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => false,
             'enableSession' => false,
-            'authMethods' => [
-                HttpBearerAuth::class,
-            ],
+            // 'authMethods' => [
+            //     HttpBearerAuth::class,
+            // ],
         ],
         'jwt' => [
             'class' => 'app\services\AuthService',

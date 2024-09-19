@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\services\AuthService;
 use Yii;
 use yii\rest\Controller;
+use yii\web\BadRequestHttpException;
 
 class AuthController extends Controller
 {
@@ -23,10 +24,12 @@ class AuthController extends Controller
 
         try {
             $token = $this->authService->authenticate($login, $senha);
-            return ['token' => $token];
+            return $this->asJson([
+                'token' => $token,
+            ])->setStatusCode(200);
         } catch (\Exception $e) {
-            Yii::$app->response->statusCode = 401;
-            return ['error' => $e->getMessage()];
+            return $this->asJson(['error' => $e->getMessage()])
+            ->setStatusCode(401);
         }
     }
 

@@ -16,7 +16,7 @@ class ClienteService
             ->send();
 
         if ($response->isOk) {
-            return $response->data; // Retorna os dados do CEP, se for válido
+            return $response->data;
         } else {
             throw new \Exception('CEP inválido');
         }
