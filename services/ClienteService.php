@@ -52,7 +52,7 @@ class ClienteService
     {
         $filesystem = Yii::$app->s3;
         
-        $filename = 'uploads/' . uniqid() . '.' . $file->extension;
+        $filename = 'uploads/clientes/' . uniqid() . '.' . $file->extension;
         $stream = fopen($file->tempName, 'r+');
         
         if ($filesystem->writeStream($filename, $stream)) {

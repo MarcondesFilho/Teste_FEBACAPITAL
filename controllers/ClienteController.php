@@ -31,7 +31,7 @@ class ClienteController extends Controller
         if ($imageFile && $imageFile->size <= 2097152) { // Max 2MB
             $cliente->imagem = $this->clienteService->uploadImage($imageFile);
         } else {
-            throw new BadRequestHttpException('Invalid image or exceeds size limit');
+            throw new BadRequestHttpException('Imagem inválida ou tamanho excedido.');
         }
         
         if ($cliente->validate() && $cliente->save()) {

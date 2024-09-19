@@ -7,20 +7,36 @@ use Yii;
 
 class LivroService
 {
+    public function validarIsbn($isbn)
+    {
+        $client = new Livro();
+        $response = $client->createRequest()
+            ->setMethod('GET')
+            ->setUrl("https://brasilapi.com.br/api/isbn/v1/{$isbn}")
+            ->send();
+
+        if ($response->isOk) {
+            return $response->data;
+        } else {
+            return false;
+        }
+    }
+
     public function cadastrarLivro($data)
     {
-        $livro = new Livro();
-        $livro->setAttributes($data);
+        $livro = new \app\models\Livro();
+        $livro->attributes = $data;
 
-        if (!$livro->validate()) {
-            return ['errors' => $livro->errors];
+        // Validar ISBN via BrasilAPI
+        if (!$this->validarIsbn($livro->isbn)) {
+            throw new \yii\web\BadRequestHttpException('ISBN inválido.');
         }
 
-        if ($livro->save()) {
+        if ($livro->validate() && $livro->save()) {
             return $livro;
         }
 
-        return ['errors' => 'Erro ao salvar o livro.'];
+        throw new \yii\web\BadRequestHttpException('Erro ao salvar livro.');
     }
 
     public function listarLivros($params)
