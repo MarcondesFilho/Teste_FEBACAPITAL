@@ -8,6 +8,7 @@ use yii\rest\Controller;
 use app\models\Cliente;
 use app\services\ClienteService;
 use yii\web\HttpException;
+use yii\filters\auth\HttpBearerAuth;
 
 class ClienteController extends Controller
 {
@@ -18,6 +19,15 @@ class ClienteController extends Controller
     {
         $this->clienteService = $clienteService;
         parent::__construct($id, $module, $config);
+    }
+
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class' => HttpBearerAuth::class,
+        ];
+        return $behaviors;
     }
 
     public function actionCreate()

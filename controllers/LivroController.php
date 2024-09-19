@@ -8,6 +8,7 @@ use yii\rest\Controller;
 use app\models\Livro;
 use app\services\LivroService;
 use yii\web\HttpException;
+use yii\filters\auth\HttpBearerAuth;
 
 class LivroController extends Controller
 {
@@ -17,6 +18,15 @@ class LivroController extends Controller
     {
         $this->livroService = $livroService;
         parent::__construct($id, $module, $config);
+    }
+
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class' => HttpBearerAuth::class,
+        ];
+        return $behaviors;
     }
 
     public function actionCreate()
