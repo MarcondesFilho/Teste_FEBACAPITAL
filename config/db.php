@@ -5,7 +5,7 @@ return [
     'dsn' => 'mysql:host=localhost;dbname=biblioteca',
     'username' => 'root',
     'password' => '',
-    'charset' => 'utf8mb4',
+    'charset' => 'utf8',
 
     // Schema cache options (for production environment)
     //'enableSchemaCache' => true,

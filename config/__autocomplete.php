@@ -11,8 +11,7 @@
  * }
  * ```
  */
-class Yii
-{
+class Yii {
     /**
      * @var \yii\web\Application|\yii\console\Application|__Application
      */
@@ -20,17 +19,15 @@ class Yii
 }
 
 /**
- * @property yii\rbac\DbManager $authManager
+ * @property yii\rbac\DbManager $authManager 
  * @property \yii\web\User|__WebUser $user
- *
+ * 
  */
-class __Application
-{
+class __Application {
 }
 
 /**
  * @property app\models\User $identity
  */
-class __WebUser
-{
+class __WebUser {
 }

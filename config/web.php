@@ -1,12 +1,15 @@
 <?php
 
-use sizeg\jwt\Jwt;
+$params = require __DIR__ . '/params.php';
+$db = require __DIR__ . '/db.php';
+
 use yii\rest\UrlRule;
 use yii\web\JsonParser;
 use yii\filters\auth\HttpBearerAuth;
-
-$params = require __DIR__ . '/params.php';
-$db = require __DIR__ . '/db.php';
+use yii\symfonymailer\Mailer;
+use League\Flysystem\AwsS3v3\AwsS3Adapter;
+use League\Flysystem\Filesystem;
+use Aws\S3\S3Client;
 
 $config = [
     'id' => 'basic',
@@ -15,12 +18,6 @@ $config = [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
-        '@src'   => '@app/src',
-    ],
-    'container' => [
-        'definitions' => [
-            'src\Domain\Repositories\UsuarioRepository' => 'src\Infrastructure\Repositories\UsuarioRepositoryImpl',
-        ],
     ],
     'components' => [
         'urlManager' => [
@@ -28,19 +25,14 @@ $config = [
             'showScriptName' => false,
             'enableStrictParsing' => true,
             'rules' => [
-                ['class' => UrlRule::class, 'controller' => ['auth', 'usuario', 'cliente', 'livro'], 'pluralize' => false],
-                // Rotas RESTful para o controlador de autenticação
+                ['class' => UrlRule::class, 'controller' => ['auth', 'cliente', 'livro']],
                 'POST api/login' => 'auth/login',
                 'POST api/register' => 'auth/register',
-                
-                // Rotas RESTful para o controlador de clientes
                 'GET api/clientes' => 'cliente/index',
                 'POST api/clientes' => 'cliente/create',
                 'GET api/clientes/<id:\d+>' => 'cliente/view',
                 'PUT api/clientes/<id:\d+>' => 'cliente/update',
                 'DELETE api/clientes/<id:\d+>' => 'cliente/delete',
-                
-                // Rotas RESTful para o controlador de livros
                 'GET api/livros' => 'livro/index',
                 'POST api/livros' => 'livro/create',
                 'GET api/livros/<id:\d+>' => 'livro/view',
@@ -50,7 +42,7 @@ $config = [
         ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => 'olmXn7opFVmTRplfb9yl4TRBedoDFiq9',
+            'cookieValidationKey' => 'iN29Z7joZYFbzVvVxLYYvA72QrclcTLr',
             'parsers' => [
                 'application/json' => JsonParser::class,
             ],
@@ -59,23 +51,22 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'src\Domain\Entities\Usuario',
+            'identityClass' => 'app\models\User',
             'enableAutoLogin' => false,
             'enableSession' => false,
             'authMethods' => [
-                HttpBearerAuth::class, // Autenticação via Bearer Token
+                HttpBearerAuth::class,
             ],
         ],
         'jwt' => [
-            'class' => 'src\Infrastructure\JWT\JWTService',
-            'key'   => 'FEBACAPITAL', // Chave secreta para geração de tokens
+            'class' => 'app\services\JWTService',
+            'key' => $params['jwt']['key'],
         ],
         'errorHandler' => [
-            'class' => 'yii\web\ErrorHandler',
-            'errorAction' => null,
+            'errorAction' => 'site/error',
         ],
         'mailer' => [
-            'class' => \yii\symfonymailer\Mailer::class,
+            'class' => Mailer::class,
             'viewPath' => '@app/mail',
             // send all mails to a file by default.
             'useFileTransport' => true,
@@ -89,12 +80,22 @@ $config = [
                 ],
             ],
         ],
-        'db' => $db,
-    ],
-    'modules' => [
-        'api' => [
-            'class' => 'yii\rest\Module',
+        's3' => [
+            'class' => Filesystem::class,
+            'filesystem' => function () {
+                $client = new S3Client([
+                    'credentials' => [
+                        'key' => 'YOUR_AWS_KEY',
+                        'secret' => 'YOUR_AWS_SECRET',
+                    ],
+                    'region' => 'us-east-1', // Your bucket's region
+                    'version' => 'latest',
+                ]);
+
+                return new Filesystem(new AwsS3Adapter($client, 'your-bucket-name'));
+            },
         ],
+        'db' => $db,
     ],
     'params' => $params,
 ];

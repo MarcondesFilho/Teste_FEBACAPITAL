@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Inherited Methods
  * @method void wantToTest($text)
@@ -18,4 +19,5 @@
 class FunctionalTester extends \Codeception\Actor
 {
     use _generated\FunctionalTesterActions;
+
 }

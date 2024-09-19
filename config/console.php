@@ -4,15 +4,14 @@ $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
 $config = [
-    'id' => 'console-app',
+    'id' => 'basic-console',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
-    'controllerNamespace' => 'src\Application\Commands',
+    'controllerNamespace' => 'app\commands',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
         '@tests' => '@app/tests',
-        '@src'   => '@app/src',
     ],
     'components' => [
         'cache' => [
@@ -29,21 +28,13 @@ $config = [
         'db' => $db,
     ],
     'params' => $params,
-    
+    /*
     'controllerMap' => [
-            'usuario' => [
-                'class' => 'src\Application\Commands\UsuarioController',
-            'migrate' => [
-                'class' => 'yii\console\controllers\MigrateController',
-                'migrationPath' => '@app/src/Infrastructure/Migrations',
-            ],
+        'fixture' => [ // Fixture generation command line.
+            'class' => 'yii\faker\FixtureController',
         ],
     ],
-    'container' => [
-        'definitions' => [
-            'src\Domain\Repositories\UsuarioRepository' => 'src\Infrastructure\Repositories\UsuarioRepositoryImpl',
-        ],
-    ],
+    */
 ];
 
 if (YII_ENV_DEV) {
