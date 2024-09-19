@@ -59,7 +59,7 @@ $config = [
             ],
         ],
         'jwt' => [
-            'class' => 'app\services\JWTService',
+            'class' => 'app\services\AuthService',
             'key' => $params['jwt']['key'],
         ],
         'errorHandler' => [
