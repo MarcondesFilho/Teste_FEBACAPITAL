@@ -3,7 +3,7 @@
 namespace app\models;
 
 use yii\db\ActiveRecord;
-use yii\web\UploadedFile;
+use yii\behaviors\TimestampBehavior;
 
 class Cliente extends ActiveRecord
 {
@@ -11,19 +11,43 @@ class Cliente extends ActiveRecord
 
     public static function tableName()
     {
-        return 'cliente'; // Nome da tabela no banco de dados
+        return 'cliente';
+    }
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+        ];
     }
 
     public function rules()
     {
         return [
-            [['nome', 'cpf', 'cep', 'logradouro', 'numero', 'cidade', 'estado', 'sexo'], 'required'],
-            [['cpf'], 'match', 'pattern' => '/^\d{3}\.\d{3}\.\d{3}\-\d{2}$/'], // Validação de CPF
-            [['cep'], 'string', 'length' => [8, 8]], // Validação de CEP
-            [['sexo'], 'in', 'range' => ['M', 'F']], // Validação de sexo
-            [['numero'], 'integer'],
-            [['complemento'], 'string'],
-            [['imagemFile'], 'file', 'extensions' => 'jpg, png', 'maxSize' => 1024 * 1024 * 2, 'tooBig' => 'Tamanho máximo permitido é 2MB'],
+            [['nome', 'cpf', 'endereco', 'sexo'], 'required'],
+            [['cpf'], 'match', 'pattern' => '/^\d{3}\.\d{3}\.\d{3}\-\d{2}$/'],
+            [['sexo'], 'in', 'range' => ['M', 'F']],
+            [['endereco', 'imagem'], 'string'],
+            [['created_at', 'updated_at'], 'safe'],
         ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'nome' => 'Nome',
+            'cpf' => 'CPF',
+            'endereco' => 'Endereço Completo',
+            'sexo' => 'Sexo',
+            'imagem' => 'Imagem',
+            'created_at' => 'Criado em',
+            'updated_at' => 'Atualizado em',
+        ];
+    }
+
+    public function formatEndereco($cep, $logradouro, $numero, $cidade, $estado, $complemento)
+    {
+        $this->endereco = "CEP: {$cep}, {$logradouro}, {$numero}, {$complemento}, {$cidade} - {$estado}";
     }
 }

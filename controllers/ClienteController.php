@@ -26,6 +26,15 @@ class ClienteController extends Controller
         
         $cliente = new Cliente();
         $cliente->attributes = $request;
+
+        $cliente->formatEndereco(
+            $request['cep'],
+            $request['logradouro'],
+            $request['numero'],
+            $request['cidade'],
+            $request['estado'],
+            $request['complemento']
+        );
         
         $imageFile = UploadedFile::getInstanceByName('imagem');
         if ($imageFile && $imageFile->size <= 2097152) { // Max 2MB
@@ -34,7 +43,7 @@ class ClienteController extends Controller
             throw new BadRequestHttpException('Imagem inválida ou tamanho excedido.');
         }
         
-        if ($cliente->validate() && $cliente->save()) {
+        if ($cliente->validateCep($cliente->cep) && $cliente->validate() && $cliente->save()) {
             return ['message' => 'Cliente cadastrado com sucesso', 'image' => $cliente->imagem];
         }
 
