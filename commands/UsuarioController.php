@@ -16,7 +16,6 @@ class UsuarioController extends Controller
         $usuario->login = $login;
         $usuario->nome = $nome;
         
-        // Gerar hash seguro da senha
         try {
             $usuario->senha = Yii::$app->getSecurity()->generatePasswordHash($senha);
         } catch (Exception $e) {
