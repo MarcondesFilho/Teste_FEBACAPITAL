@@ -117,153 +117,153 @@ DOCUMENTAÇÃO DAS APIS
 
 ### Autenticação
 
-POST /api/login
-Exemplo de request:
-{
-    "login": "adm",
-    "senha": "adm123"
-}
+    POST /api/login
+    Exemplo de request:
+    {
+        "login": "adm",
+        "senha": "adm123"
+    }
 
-Resposta em caso de sucesso:
-{
-    "token": "Bearer <token>"
-}
+    Resposta em caso de sucesso:
+    {
+        "token": "Bearer <token>"
+    }
 
 ### Criação de Usuário
 
-POST /api/register
-Exemplo de request:
-{
-    "login": "novo_user",
-    "senha": "senha123",
-    "nome": "Novo Usuário"
-}
+    POST /api/register
+    Exemplo de request:
+    {
+        "login": "novo_user",
+        "senha": "senha123",
+        "nome": "Novo Usuário"
+    }
 
-Resposta em caso de sucesso:
-{
-    "message": "Usuário criado com sucesso"
-}
+    Resposta em caso de sucesso:
+    {
+        "message": "Usuário criado com sucesso"
+    }
 
 ### Cadastro de Clientes
 
-POST /api/clientes
-Exemplo de request:
-{
-    "nome": "João Silva",
-    "cpf": "12345678909",
-    "endereco": "Rua A, 123, Bairro, Cidade, Estado",
-    "sexo": "M"
-}
+    POST /api/clientes
+    Exemplo de request:
+    {
+        "nome": "João Silva",
+        "cpf": "12345678909",
+        "endereco": "Rua A, 123, Bairro, Cidade, Estado",
+        "sexo": "M"
+    }
 
-Resposta em caso de sucesso:
-{
-    "message": "Cliente cadastrado com sucesso"
-}
+    Resposta em caso de sucesso:
+    {
+        "message": "Cliente cadastrado com sucesso"
+    }
 
 ### Listar Clientes
 
-GET /api/clientes
+    GET /api/clientes
 
-Exemplo de request:
-GET /api/clientes?limit=10&offset=0
+    Exemplo de request:
+    GET /api/clientes?limit=10&offset=0
 
-Resposta em caso de sucesso:
-{
-    "data": [
-        {
-            "id": 1,
-            "nome": "João Silva",
-            "cpf": "12345678909",
-            "endereco": "Rua A, 123, Bairro, Cidade, Estado",
-            "sexo": "M"
-        },
-        {
-            "id": 2,
-            "nome": "Maria Souza",
-            "cpf": "98765432100",
-            "endereco": "Rua B, 456, Bairro, Cidade, Estado",
-            "sexo": "F"
-        }
-    ]
-}
+    Resposta em caso de sucesso:
+    {
+        "data": [
+            {
+                "id": 1,
+                "nome": "João Silva",
+                "cpf": "12345678909",
+                "endereco": "Rua A, 123, Bairro, Cidade, Estado",
+                "sexo": "M"
+            },
+            {
+                "id": 2,
+                "nome": "Maria Souza",
+                "cpf": "98765432100",
+                "endereco": "Rua B, 456, Bairro, Cidade, Estado",
+                "sexo": "F"
+            }
+        ]
+    }
 
 ### Visualizar Cliente
 
-GET /api/clientes/<id>
+    GET /api/clientes/<id>
 
-Exemplo de request:
-GET /api/clientes/1
+    Exemplo de request:
+    GET /api/clientes/1
 
-Resposta em caso de sucesso:
-{
-    "id": 1,
-    "nome": "João Silva",
-    "cpf": "12345678909",
-    "endereco": "Rua A, 123, Bairro, Cidade, Estado",
-    "sexo": "M"
-}
+    Resposta em caso de sucesso:
+    {
+        "id": 1,
+        "nome": "João Silva",
+        "cpf": "12345678909",
+        "endereco": "Rua A, 123, Bairro, Cidade, Estado",
+        "sexo": "M"
+    }
 
 ### Cadastro de Livros
 
-POST /api/livros
-Exemplo de request:
-{
-    "isbn": "978-3-16-148410-0",
-    "titulo": "O Senhor dos Anéis",
-    "autor": "J.R.R. Tolkien",
-    "preco": 99.90,
-    "estoque": 10
-}
+    POST /api/livros
+    Exemplo de request:
+    {
+        "isbn": "978-3-16-148410-0",
+        "titulo": "O Senhor dos Anéis",
+        "autor": "J.R.R. Tolkien",
+        "preco": 99.90,
+        "estoque": 10
+    }
 
-Resposta em caso de sucesso:
-{
-    "message": "Livro cadastrado com sucesso"
-}
+    Resposta em caso de sucesso:
+    {
+        "message": "Livro cadastrado com sucesso"
+    }
 
 ### Listar Livros
 
-GET /api/livros
+    GET /api/livros
 
-Exemplo de request:
-GET /api/livros?limit=10&offset=0
+    Exemplo de request:
+    GET /api/livros?limit=10&offset=0
 
-Resposta em caso de sucesso:
-{
-    "data": [
-        {
-            "id": 1,
-            "isbn": "978-3-16-148410-0",
-            "titulo": "O Senhor dos Anéis",
-            "autor": "J.R.R. Tolkien",
-            "preco": 99.90,
-            "estoque": 10
-        },
-        {
-            "id": 2,
-            "isbn": "978-3-16-148410-1",
-            "titulo": "Harry Potter",
-            "autor": "J.K. Rowling",
-            "preco": 79.90,
-            "estoque": 5
-        }
-    ]
-}
+    Resposta em caso de sucesso:
+    {
+        "data": [
+            {
+                "id": 1,
+                "isbn": "978-3-16-148410-0",
+                "titulo": "O Senhor dos Anéis",
+                "autor": "J.R.R. Tolkien",
+                "preco": 99.90,
+                "estoque": 10
+            },
+            {
+                "id": 2,
+                "isbn": "978-3-16-148410-1",
+                "titulo": "Harry Potter",
+                "autor": "J.K. Rowling",
+                "preco": 79.90,
+                "estoque": 5
+            }
+        ]
+    }
 
 ### Visualizar Livro
 
-GET /api/livros/<id>
+    GET /api/livros/<id>
 
-Exemplo de request:
-GET /api/livros/1
+    Exemplo de request:
+    GET /api/livros/1
 
-Resposta em caso de sucesso:
-{
-    "id": 1,
-    "isbn": "978-3-16-148410-0",
-    "titulo": "O Senhor dos Anéis",
-    "autor": "J.R.R. Tolkien",
-    "preco": 99.90,
-    "estoque": 10
-}
+    Resposta em caso de sucesso:
+    {
+        "id": 1,
+        "isbn": "978-3-16-148410-0",
+        "titulo": "O Senhor dos Anéis",
+        "autor": "J.R.R. Tolkien",
+        "preco": 99.90,
+        "estoque": 10
+    }
 
 
