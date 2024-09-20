@@ -5,11 +5,11 @@ $db = require __DIR__ . '/db.php';
 
 use yii\rest\UrlRule;
 use yii\web\JsonParser;
-use yii\filters\auth\HttpBearerAuth;
 use yii\symfonymailer\Mailer;
-use League\Flysystem\AwsS3v3\AwsS3Adapter;
-use League\Flysystem\Filesystem;
 use Aws\S3\S3Client;
+use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
+use League\Flysystem\Filesystem;
+use League\Flysystem\Visibility;
 
 $config = [
     'id' => 'basic',
@@ -54,9 +54,6 @@ $config = [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => false,
             'enableSession' => false,
-            // 'authMethods' => [
-            //     HttpBearerAuth::class,
-            // ],
         ],
         'jwt' => [
             'class' => 'app\services\AuthService',
@@ -80,21 +77,25 @@ $config = [
                 ],
             ],
         ],
-        's3' => [
-            'class' => Filesystem::class,
-            'filesystem' => function () {
-                $client = new S3Client([
-                    'credentials' => [
-                        'key' => 'YOUR_AWS_KEY',
-                        'secret' => 'YOUR_AWS_SECRET',
-                    ],
-                    'region' => 'us-east-1',
-                    'version' => 'latest',
-                ]);
+        's3' => function () {
+            $client = new S3Client([
+                'credentials' => [
+                    'key' => 'your-aws-access-key',
+                    'secret' => 'your-aws-secret-key',
+                ],
+                'region' => 'us-east-1',
+                'version' => 'latest',
+            ]);
 
-                return new Filesystem(new AwsS3Adapter($client, 'your-bucket-name'));
-            },
-        ],
+            $adapter = new AwsS3V3Adapter(
+                $client,
+                'your-bucket-name',
+                'path/prefix',
+                new \League\Flysystem\AwsS3V3\PortableVisibilityConverter(Visibility::PUBLIC)
+            );
+
+            return new Filesystem($adapter);
+        },
         'db' => $db,
     ],
     'params' => $params,
@@ -113,9 +114,8 @@ if (YII_ENV_DEV) {
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'allowedIPs' => ['127.0.0.1', '::1'],
     ];
-    $config['modules']['gii']['allowedIPs'] = ['127.0.0.1', '::1'];
 }
 
 return $config;

@@ -2,7 +2,7 @@
     "require": {
         "aws/aws-sdk-php": "^3.322",
         "league/flysystem": "^3.28",
-        "league/flysystem-aws-s3-v3": "^3.28",
+        "league/flysystem-aws-s3-v3": "3.0",
         "guzzlehttp/guzzle": "^7.9",
         "firebase/php-jwt": "^6.10",
         "league/flysystem-ftp": "^3.28"

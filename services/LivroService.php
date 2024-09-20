@@ -27,7 +27,6 @@ class LivroService
         $livro = new \app\models\Livro();
         $livro->attributes = $data;
 
-        // Validar ISBN via BrasilAPI
         if (!$this->validarIsbn($livro->isbn)) {
             throw new \yii\web\BadRequestHttpException('ISBN inválido.');
         }

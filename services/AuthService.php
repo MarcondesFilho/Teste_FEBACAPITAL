@@ -31,7 +31,6 @@ class AuthService
 
     public function register($login, $senha, $nome)
     {
-        // Lógica de criação de usuário
         $usuario = new User();
         $usuario->login = $login;
         $usuario->senha = Yii::$app->getSecurity()->generatePasswordHash($senha);

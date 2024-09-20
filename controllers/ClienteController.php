@@ -9,14 +9,16 @@ use app\models\Cliente;
 use app\services\ClienteService;
 use yii\web\HttpException;
 use app\services\JWTService;
+use app\services\ImageUploadService;
 
 class ClienteController extends Controller
 {
     private $clienteService;
     private $jwtService;
 
-    public function __construct($id, $module, ClienteService $clienteService, JWTService $jwtService, $config = [])
+    public function __construct($id, $module, ClienteService $clienteService, JWTService $jwtService, ImageUploadService $imageUploadService, $config = [])
     {
+        $this->imageUploadService = $imageUploadService;
         $this->clienteService = $clienteService;
         $this->jwtService = $jwtService;
         parent::__construct($id, $module, $config);
@@ -47,13 +49,9 @@ class ClienteController extends Controller
         );
         
         $imageFile = UploadedFile::getInstanceByName('imagem');
-        if ($imageFile && $imageFile->size <= 2097152) { // Max 2MB
-            $cliente->imagem = $this->clienteService->uploadImage($imageFile);
-        } 
-        // else {
-        //     return $this->asJson(['error' => 'Invalid image or exceeded size limit.'])
-        //         ->setStatusCode(400);
-        // }
+        if ($imageFile) {
+            $cliente->imagem = $this->imageUploadService->uploadImage($imageFile, 'clientes');
+        }
 
         if ($cliente->validate() && $cliente->save()) {
             return $this->asJson(['message' => 'Cliente cadastrado com sucesso'])

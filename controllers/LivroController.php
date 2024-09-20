@@ -9,14 +9,16 @@ use app\models\Livro;
 use app\services\LivroService;
 use yii\web\HttpException;
 use app\services\JWTService;
+use app\services\ImageUploadService;
 
 class LivroController extends Controller
 {
     private $livroService;
     private $jwtService;
 
-    public function __construct($id, $module, LivroService $livroService, JWTService $jwtService, $config = [])
+    public function __construct($id, $module, LivroService $livroService, JWTService $jwtService, ImageUploadService $imageUploadService, $config = [])
     {
+        $this->imageUploadService = $imageUploadService;
         $this->livroService = $livroService;
         $this->jwtService = $jwtService;
         parent::__construct($id, $module, $config);
@@ -38,13 +40,9 @@ class LivroController extends Controller
         $livro->attributes = $request;
         
         $imageFile = UploadedFile::getInstanceByName('imagem');
-        if ($imageFile && $imageFile->size <= 2097152) { // Max 2MB
-            $livro->imagem = $this->livroService->uploadImage($imageFile);
-        } 
-        // else {
-        //     return $this->asJson(['error' => 'Invalid image or exceeded size limit.'])
-        //         ->setStatusCode(400);
-        // }
+        if ($imageFile) {
+            $livro->imagem = $this->imageUploadService->uploadImage($imageFile, 'livros');
+        }
 
         if ($livro->validate() && $livro->save()) {
             return $this->asJson(['message' => 'Livro cadastrado com sucesso'])
@@ -95,8 +93,9 @@ class LivroController extends Controller
             return $this->asJson($livro)
                 ->setStatusCode(200);
         }
-
-        throw new HttpException(404, 'Livro não encontrado');
+        
+        return $this->asJson(['message' => 'Livro não encontrado'])
+            ->setStatusCode(404);
     }
 
     public function actionUpdate($id)
@@ -105,7 +104,8 @@ class LivroController extends Controller
     
         $livro = Livro::findOne($id);
         if (!$livro) {
-            throw new HttpException(404, 'Livro não encontrado');
+            return $this->asJson(['message' => 'Livro não encontrado'])
+            ->setStatusCode(404);
         }
 
         $request = Yii::$app->request->post();
@@ -130,6 +130,7 @@ class LivroController extends Controller
                 ->setStatusCode(204);
         }
 
-        throw new HttpException(404, 'Livro não encontrado');
+        return $this->asJson(['message' => 'Livro não encontrado'])
+            ->setStatusCode(404);
     }
 }
