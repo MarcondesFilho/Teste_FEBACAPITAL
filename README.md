@@ -113,7 +113,7 @@ php yii usuario/create adm adm123 "Admin User"
 ~~~
 
 DOCUMENTAÇÃO DAS APIS
----------------------
+-------------
 
 ### Autenticação
 
